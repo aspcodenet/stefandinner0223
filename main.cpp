@@ -47,11 +47,11 @@ public: // accessmodifier
         this->name = name;
         std::cout << "GameCharacter created!" << std::endl;
     }
-    void act() {
+    virtual void act() {
         std::cout << name << " does something." << std::endl;
     }
 
-    void mightLevelUp() {
+    virtual void mightLevelUp() {
         // Base GameCharacter doesn't level up, so this function does nothing
     }
 
@@ -70,7 +70,7 @@ public:
     }
 
 
-    void mightLevelUp() {
+    void mightLevelUp() override {
         if(burpCount >= 3) {
             level++; // level = level + 1
             burpCount = 0; // reset burp count after leveling up
@@ -78,7 +78,7 @@ public:
         }
     }
 
-      void act(){// function / method
+      void act() override {// function / method
         std::string actions[]={"eats","drinks","burps"};
         int index = rand()% 3; 
         if( actions[index] == "burps") {
@@ -97,13 +97,13 @@ public:
         std::cout << "Fly created!" << std::endl;
     }
 
-    void act() {
+    void act() override {
         std::string actions[]={"flies","lands in the food", "buzzes"};
         int index = rand()%3;
         std::cout << "Fly " << name << " " << actions[index] << std::endl;
     }
 
-    void mightLevelUp() {
+    void mightLevelUp() override {
         // Flies don't level up, so this function does nothing
     }
 
@@ -115,14 +115,24 @@ public:
 
 int main() {
     srand((unsigned) time(NULL));
+    // C++ we have reference couting pointers, we have smart pointers and we have raw pointers
+    std::shared_ptr<Human> stefan = std::make_shared<Human>("Stefan", 30);
 
-//    std::shared_ptr<Human> h = std::make_shared<Human>("Stefan", 30);
+    //Human stefan("Stefan", 30);
 
-    Human stefan("Stefan", 30);
-    Human kerstin("Kerstin", 28);
-    Human oliver("Oliver", 5); // human is a gamecharacter
-    Fly fly("Buzz"); // fly is a gamecharacter
-    std::vector<GameCharacter> humans; // resizable array
+    // NEW = heap memory allocation, the object will persist until we delete it
+ //   Human *stefan = new Human("Stefan", 30); // dynamically allocated human 
+    //delete stefan; // free the memory allocated for stefan
+    // stefan = nullptr; // set the pointer to null after deleting to avoid dangling pointer
+   
+    // if a stack is perfect ?   a stack variable can't grow or shrink, it has a fixed size determined at compile time, and it is automatically deallocated when it goes out of scope.
+    // std::string name = "Stefan"; // name is a stack variable, it will be automatically deallocated when it goes out of scope
+    // name = name + " Holmberg"; // name is now "Stefan Holmberg", but the original "Stefan" string is still in memory until it is deallocated
+    
+    std::shared_ptr<Human> kerstin = std::make_shared<Human>("Kerstin", 28);
+    std::shared_ptr<Human> oliver = std::make_shared<Human>("Oliver", 5); // human is a gamecharacter
+    std::shared_ptr<Fly> fly = std::make_shared<Fly>("Buzz"); // fly is a gamecharacter
+    std::vector<std::shared_ptr<GameCharacter>> humans; // resizable array
 
 
     humans.push_back(stefan);
@@ -133,12 +143,13 @@ int main() {
     while(true) { // gameloop
         //  A COPY of each human in humans will be created and stored in human
         // REFERENCES ARE aliases, they point to the same object in memory
-        for(GameCharacter &human : humans) { // for each human in humans
-            human.act();
+        for(std::shared_ptr<GameCharacter> human : humans) { // for each human in n
+            human->act(); // if gamecharacter pointer is a human -> human->act()
+            //               if gamecharacter pointer is a fly -> fly->act()
         }
        // humans.push_back(Human("New Human", 20)); // add a new human to the vector
-        for(GameCharacter &human : humans) { // for each human in humans
-            human.mightLevelUp();
+        for(std::shared_ptr<GameCharacter> human : humans) { // for each human in humans
+            human->mightLevelUp();
         }
         
         std::cout << "Press key for next turn " << std::endl;
