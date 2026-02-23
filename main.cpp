@@ -30,6 +30,8 @@
 //         new 
 //         there are also ... FLIES in Stefans house
 
+// polymorphism = same function name, different behavior
+
 // Inheritance = code reuse and DRY (Don't Repeat Yourself)
 // Dog = give birth to living things + breastfeed, BARK, eat, sleep, ...
 // Cat = give birth to living things + breastfeed, MEOW, eat, sleep, ...
