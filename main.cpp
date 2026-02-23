@@ -25,6 +25,7 @@
 // 5. In vector...
 
 // 6. INHERITANCE arv
+//         new 
 //         there are also ... FLIES in Stefans house
 
 
